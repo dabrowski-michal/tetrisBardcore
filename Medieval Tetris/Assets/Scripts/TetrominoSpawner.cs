@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class TetrominoSpawner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TetrisBlock[] Tetrominos; 
+
+    public void Start()
     {
-        
+        SpawnTetromino();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SpawnTetromino()
     {
-        
+        int randomTetromino = Random.Range(0, Tetrominos.Length);
+        Instantiate(Tetrominos[randomTetromino],transform.position, Quaternion.identity);
     }
 }
