@@ -363,6 +363,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29220002992134b41adc8d97507bba44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationPoint: {x: 0.5, y: 0.5, z: 0}
+  rotationPoint: {x: 1, y: 1, z: 0}
   fallTime: 0.8
   accelerationFactor: 20

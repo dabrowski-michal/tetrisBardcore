@@ -10,9 +10,10 @@ public class TetrisBlock : MonoBehaviour
     public static int heigth = 20;
     public static int width = 10;
 
+    private static Transform[,] grid = new Transform[width, heigth];
+
     [SerializeField] private float fallTime;
     [SerializeField] private float accelerationFactor;
-    [SerializeField] private TetrominoSpawner tetrominoSpawner;
 
     void Update()
     {
@@ -33,10 +34,18 @@ public class TetrisBlock : MonoBehaviour
             transform.position += new Vector3(0,-1,0);
             if (!ValidMove())
             {
-                transform.position -= new Vector3(0, -1, 0);
+                StopTetrominoMovement();
             }
             previousTime = Time.time;
         }
+    }
+
+    public void StopTetrominoMovement()
+    {
+        transform.position -= new Vector3(0, -1, 0);
+        AddToGrid();
+        this.enabled = false;
+        FindObjectOfType<TetrominoSpawner>().SpawnTetromino(); //should inform game manager
     }
 
     public void MoveTetromino(Vector3 vectorMovement)
@@ -51,9 +60,18 @@ public class TetrisBlock : MonoBehaviour
     {
         transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), 90);
         if (!ValidMove()) transform.RotateAround(transform.TransformPoint(rotationPoint), new Vector3(0, 0, 1), -90);
-
     }
 
+    public void AddToGrid()
+    {
+        foreach (Transform children in transform)
+        {
+            int roundedX = Mathf.RoundToInt(children.transform.position.x);
+            int roundedY = Mathf.RoundToInt(children.transform.position.y);
+
+            grid[roundedX, roundedY] = children;
+        }
+    }
 
     bool ValidMove()
     {
@@ -63,6 +81,11 @@ public class TetrisBlock : MonoBehaviour
             int roundedY = Mathf.RoundToInt(children.transform.position.y);
 
             if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= heigth)
+            {
+                return false;
+            }
+
+            if(grid[roundedX,roundedY] != null)
             {
                 return false;
             }
