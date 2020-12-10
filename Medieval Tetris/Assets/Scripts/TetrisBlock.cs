@@ -44,6 +44,7 @@ public class TetrisBlock : MonoBehaviour
     {
         transform.position -= new Vector3(0, -1, 0);
         AddToGrid();
+        CheckForLines();
         this.enabled = false;
         FindObjectOfType<TetrominoSpawner>().SpawnTetromino(); //should inform game manager
     }
@@ -70,6 +71,55 @@ public class TetrisBlock : MonoBehaviour
             int roundedY = Mathf.RoundToInt(children.transform.position.y);
 
             grid[roundedX, roundedY] = children;
+        }
+    }
+
+    void CheckForLines()
+    {
+        for(int i=heigth-1; i>= 0; i--)
+        {
+            if (FullLineExists(i))
+            {
+                DeleteLine(i);
+                RowDown(i);
+            }
+        }
+    }
+
+    bool FullLineExists(int i)
+    {
+        for (int j=0;j<width; j++)
+        {
+            if(grid[j,i] == null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    void DeleteLine(int i)
+    {
+        for (int j=0; j < width; j++)
+        {
+            Destroy(grid[j, i].gameObject);
+
+        }
+    }
+
+    void RowDown(int i)
+    {
+        for (int y = i; y< heigth; y++)
+        {
+            for(int j = 0; j < width; j++)
+            {
+                if(grid[j,y] != null)
+                {
+                    //grid[j, y - 1] = grid[j, y];
+                    //grid[j, y] = null;
+                    //grid[j, y - 1].transform.position -= new Vector3(0, 1, 0);
+                }
+            }
         }
     }
 
