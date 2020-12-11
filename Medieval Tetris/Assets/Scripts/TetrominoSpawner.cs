@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class TetrominoSpawner : MonoBehaviour
 {
-    [SerializeField] private TetrisBlock[] Tetrominos; 
+    [SerializeField] private Transform[] Tetrominos;
+
+    [SerializeField] private TetrominoMovement tetrominoController;
 
     public void Start()
     {
@@ -14,6 +16,9 @@ public class TetrominoSpawner : MonoBehaviour
     public void SpawnTetromino()
     {
         int randomTetromino = Random.Range(0, Tetrominos.Length);
-        Instantiate(Tetrominos[randomTetromino],transform.position, Quaternion.identity);
+        Transform newTetromino = Instantiate(Tetrominos[randomTetromino],transform.position, Quaternion.identity);
+        tetrominoController.ProvideTetromino(newTetromino);
     }
+
+
 }

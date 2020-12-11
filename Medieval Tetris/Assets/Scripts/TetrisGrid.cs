@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TetrisBlock : MonoBehaviour
+public class TetrisGrid : MonoBehaviour
 {
     public static int width = 10;
     public static int height = 20;
     public static Transform[,] grid = new Transform[width, height];
 
-
-    public void AddToGrid()
+    public void AddToGrid(Transform tetromino)
     {
-        foreach (Transform children in transform)
+        foreach (Transform children in tetromino.transform)
         {
             int roundedX = Mathf.RoundToInt(children.transform.position.x);
             int roundedY = Mathf.RoundToInt(children.transform.position.y);
@@ -20,9 +19,31 @@ public class TetrisBlock : MonoBehaviour
         }
     }
 
-    void CheckForLines()
+    public bool AllowMovement(Transform activeTetromino)
     {
-        for(int i=height-1; i >= 0; i--)
+        foreach (Transform children in activeTetromino.transform)
+        {
+            int roundedX = Mathf.RoundToInt(children.transform.position.x);
+            int roundedY = Mathf.RoundToInt(children.transform.position.y);
+
+
+            if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height)
+            {
+                return false;
+            }
+
+            if (grid[roundedX, roundedY] != null)
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    public void CheckForLines()
+    {
+        for (int i = height - 1; i >= 0; i--)
         {
             if (FullLineExists(i))
             {
@@ -32,11 +53,11 @@ public class TetrisBlock : MonoBehaviour
         }
     }
 
-    bool FullLineExists(int i)
+    public bool FullLineExists(int i)
     {
-        for (int j =0; j<width; j++)
+        for (int j = 0; j < width; j++)
         {
-            if(grid[j,i] == null)
+            if (grid[j, i] == null)
             {
                 return false;
             }
@@ -46,7 +67,7 @@ public class TetrisBlock : MonoBehaviour
 
     public void DeleteLine(int i)
     {
-        for (int j=0; j<width; j++)
+        for (int j = 0; j < width; j++)
         {
             Destroy(grid[j, i].gameObject);
             grid[j, i] = null;
@@ -56,7 +77,7 @@ public class TetrisBlock : MonoBehaviour
 
     public void DecreaseRow(int i)
     {
-        for(int y=i; y<height; y++)
+        for (int y = i; y < height; y++)
         {
             for (int j = 0; j < width; ++j)
             {
