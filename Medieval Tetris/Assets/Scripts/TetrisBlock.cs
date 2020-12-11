@@ -7,10 +7,10 @@ public class TetrisBlock : MonoBehaviour
     public Vector3 rotationPoint;
 	private float previousTime;
 
-    public static int heigth = 20;
     public static int width = 10;
+    public static int height = 20;
 
-    private static Transform[,] grid = new Transform[width, heigth];
+    public static Transform[,] grid = new Transform[width, height];
 
     [SerializeField] private float fallTime;
     [SerializeField] private float accelerationFactor;
@@ -76,19 +76,19 @@ public class TetrisBlock : MonoBehaviour
 
     void CheckForLines()
     {
-        for(int i=heigth-1; i>= 0; i--)
+        for(int i=height-1; i >= 0; i--)
         {
             if (FullLineExists(i))
             {
                 DeleteLine(i);
-                RowDown(i);
+                DecreaseRow(i);
             }
         }
     }
 
     bool FullLineExists(int i)
     {
-        for (int j=0;j<width; j++)
+        for (int j =0; j<width; j++)
         {
             if(grid[j,i] == null)
             {
@@ -98,26 +98,27 @@ public class TetrisBlock : MonoBehaviour
         return true;
     }
 
-    void DeleteLine(int i)
+    public void DeleteLine(int i)
     {
-        for (int j=0; j < width; j++)
+        for (int j=0; j<width; j++)
         {
             Destroy(grid[j, i].gameObject);
+            grid[j, i] = null;
 
         }
     }
 
-    void RowDown(int i)
+    public void DecreaseRow(int i)
     {
-        for (int y = i; y< heigth; y++)
+        for(int y=i; y<height; y++)
         {
-            for(int j = 0; j < width; j++)
+            for (int j = 0; j < width; ++j)
             {
-                if(grid[j,y] != null)
+                if (grid[j, y] != null)
                 {
-                    //grid[j, y - 1] = grid[j, y];
-                    //grid[j, y] = null;
-                    //grid[j, y - 1].transform.position -= new Vector3(0, 1, 0);
+                    grid[j, y].transform.position -= new Vector3(0, 1, 0);
+                    grid[j, y - 1] = grid[j, y];
+                    grid[j, y] = null;
                 }
             }
         }
@@ -130,12 +131,12 @@ public class TetrisBlock : MonoBehaviour
             int roundedX = Mathf.RoundToInt(children.transform.position.x);
             int roundedY = Mathf.RoundToInt(children.transform.position.y);
 
-            if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= heigth)
+            if (roundedX < 0 || roundedX >= width || roundedY < 0 || roundedY >= height)
             {
                 return false;
             }
 
-            if(grid[roundedX,roundedY] != null)
+            if (grid[roundedX, roundedY] != null)
             {
                 return false;
             }
