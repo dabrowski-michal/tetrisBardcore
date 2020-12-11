@@ -7,6 +7,7 @@ public class TetrisGrid : MonoBehaviour
     public static int width = 10;
     public static int height = 20;
     public static Transform[,] grid = new Transform[width, height];
+    public ScoreManager scoreManager;
 
     public void AddToGrid(Transform tetromino)
     {
@@ -17,6 +18,9 @@ public class TetrisGrid : MonoBehaviour
 
             grid[roundedX, roundedY] = children;
         }
+
+        CheckForFullColumn();
+        CheckForFullRowes();
     }
 
     public bool AllowMovement(Transform activeTetromino)
@@ -41,19 +45,26 @@ public class TetrisGrid : MonoBehaviour
         return true;
     }
 
-    public void CheckForLines()
+    public void CheckForFullColumn()
     {
-        for (int i = height - 1; i >= 0; i--)
-        {
-            if (FullLineExists(i))
-            {
-                DeleteLine(i);
-                DecreaseRow(i);
-            }
-        }
     }
 
-    public bool FullLineExists(int i)
+    public void CheckForFullRowes()
+    {
+        int numberOfFullRows =0;
+        for (int i = height - 1; i >= 0; i--)
+        {
+            if (RowIsFull(i))
+            {
+                numberOfFullRows++;
+                DestroyFullRow(i);
+                MoveRowsDown(i);
+            }
+        }
+        if (numberOfFullRows > 0) scoreManager.RowsHasBeenDestroyed(numberOfFullRows);
+    }
+
+    public bool RowIsFull(int i)
     {
         for (int j = 0; j < width; j++)
         {
@@ -65,7 +76,7 @@ public class TetrisGrid : MonoBehaviour
         return true;
     }
 
-    public void DeleteLine(int i)
+    public void DestroyFullRow(int i)
     {
         for (int j = 0; j < width; j++)
         {
@@ -75,7 +86,7 @@ public class TetrisGrid : MonoBehaviour
         }
     }
 
-    public void DecreaseRow(int i)
+    public void MoveRowsDown(int i)
     {
         for (int y = i; y < height; y++)
         {

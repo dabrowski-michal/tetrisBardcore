@@ -11,12 +11,12 @@ public class TetrominoMovement : MonoBehaviour
 
     [SerializeField] private float fallTime;
     [SerializeField] private float accelerationFactor;
-    public TetrominoSpawner spawner;
+    public TetrominoProvider tetrominoProvider;
     public TetrisGrid tetrisGrid;
 
-    public void ProvideTetromino(Transform newTetromino)
+    public void SetActiveTetromino(Transform newActiveTetromino)
     {
-        activeTetromino = newTetromino;
+        activeTetromino = newActiveTetromino;
     }
 
     void Update()
@@ -63,7 +63,6 @@ public class TetrominoMovement : MonoBehaviour
     {
         activeTetromino.transform.position -= new Vector3(0, -1, 0);
         tetrisGrid.AddToGrid(activeTetromino);
-        tetrisGrid.CheckForLines();
-        spawner.SpawnTetromino(); 
+        tetrominoProvider.ProvideTetromino(); 
     }
 }
