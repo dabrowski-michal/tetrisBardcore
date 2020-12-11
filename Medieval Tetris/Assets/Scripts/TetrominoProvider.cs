@@ -8,6 +8,7 @@ public class TetrominoProvider : MonoBehaviour
     [SerializeField] private Transform[] preparedBlocksPositions;
     [SerializeField] private List<Transform> preparedTetrominos;
     [SerializeField] private TetrominoMovement movementController;
+    [SerializeField] private Transform tetrominoPoolParent;
 
     public void Start()
     {
@@ -28,6 +29,7 @@ public class TetrominoProvider : MonoBehaviour
 
     public void ShiftPreparedTetrominos()
     {
+        //TODO: Refactor this part
         preparedTetrominos[0] = preparedTetrominos[1];
         preparedTetrominos[0].transform.position = preparedBlocksPositions[0].position;
 
@@ -42,6 +44,7 @@ public class TetrominoProvider : MonoBehaviour
     {
         int randomIndex = Random.Range(0, tetrominoPrefabs.Length);
         Transform newTetromino = Instantiate(tetrominoPrefabs[randomIndex], tetrominoPosition, Quaternion.identity);
+        newTetromino.transform.SetParent(tetrominoPoolParent);
         return newTetromino;
     }
 
